@@ -12,6 +12,12 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
 
   app:
     build:
@@ -19,7 +25,7 @@ services:
       dockerfile: Dockerfile
     container_name: nest-docker-postgres
     environment:
-      - PORT=${PORT}
+      - PORT=3000
     ports:
       - '3000:3000'
     depends_on:
